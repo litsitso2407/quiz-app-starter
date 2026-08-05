@@ -1,28 +1,130 @@
 import questions from "./data/questions";
 import "./App.css";
+import { useState } from "react";
 
 function App() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [score, setScore] = useState(0);
+  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [showResults, setShowResults] = useState(false);
+
+  const currentQuestion = questions[currentIndex];
+  const totalQuestions = questions.length;
+
+  // Handle when a user clicks an option
+  const handleOptionClick = (index: number) => {
+    if (selectedOption !== null) return; // Prevent changing the answer once selected
+    setSelectedOption(index);
+    
+    if (index === currentQuestion.correctAnswer) {
+      setScore((prevScore) => prevScore + 1);
+    }
+  };
+
+  // Handle moving to the next question or finishing the quiz
+  const handleNext = () => {
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+      setSelectedOption(null); // Reset selection for the next question
+    } else {
+      setShowResults(true); // Quiz is done
+    }
+  };
+
+  // Handle restarting the quiz
+  const handleRestart = () => {
+    setCurrentIndex(0);
+    setScore(0);
+    setSelectedOption(null);
+    setShowResults(false);
+  };
+
+  // Results Screen
+  if (showResults) {
+    const percentage = Math.round((score / totalQuestions) * 100);
+    return (
+      <div className="app results-container">
+        <h1>Quiz Completed! 🎉</h1>
+        <div className="score-card">
+          <h2>Your Score</h2>
+          <p className="score-text">{score} / {totalQuestions}</p>
+          <p className="score-percentage">{percentage}%</p>
+        </div>
+        <button className="restart-btn" onClick={handleRestart}>
+          Restart Quiz
+        </button>
+      </div>
+    );
+  }
+
+  // Main Quiz Screen
   return (
     <div className="app">
       <h1>Quiz App</h1>
-      <p>
-        {questions.length} question{questions.length !== 1 ? "s" : ""} loaded
-      </p>
+      
+      {/* Progress Bar */}
+      <div className="progress-bar-container">
+        <div 
+          className="progress-bar" 
+          style={{ width: `${((currentIndex + 1) / totalQuestions) * 100}%` }}
+        ></div>
+      </div>
 
-      {/*
-        This is your starting point. Build your quiz from here.
+      {/* Header (Count & Category) */}
+      <div className="question-header">
+        <p className="question-count">
+          Question {currentIndex + 1} of {totalQuestions}
+        </p>
+        <span className="category-badge">{currentQuestion.category}</span>
+      </div>
 
-        Some things to figure out:
-        - How do you display one question at a time?
-        - How does the user select an answer?
-        - How do you track the score?
-        - How do you move to the next question?
-        - What happens when the quiz is done?
+      {/* Question Text */}
+      <h2 className="question-text">{currentQuestion.question}</h2>
 
-        There's no single right way — make it your own.
-      */}
+      {/* Options */}
+      <div className="options-container">
+        {currentQuestion.options.map((option, index) => {
+          let buttonClass = "option-btn";
+          
+          // Apply correct/incorrect styles after an option is selected
+          if (selectedOption !== null) {
+            if (index === currentQuestion.correctAnswer) {
+              buttonClass += " correct";
+            } else if (index === selectedOption && index !== currentQuestion.correctAnswer) {
+              buttonClass += " incorrect";
+            }
+          }
+
+          return (
+            <button
+              key={index}
+              className={buttonClass}
+              onClick={() => handleOptionClick(index)}
+              disabled={selectedOption !== null} // Disable buttons after an answer is picked
+            >
+              {option}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Feedback & Next Button (Only shows after an option is selected) */}
+      {selectedOption !== null && (
+        <div className="feedback-container">
+          <div className={`feedback-text ${selectedOption === currentQuestion.correctAnswer ? 'correct-text' : 'incorrect-text'}`}>
+            {selectedOption === currentQuestion.correctAnswer ? " Correct!" : " Incorrect!"}
+          </div>
+          <p className="explanation">
+            <strong>Explanation:</strong> {currentQuestion.explanation}
+          </p>
+          <button className="next-btn" onClick={handleNext}>
+            {currentIndex < totalQuestions - 1 ? "Next Question ➔" : "Finish Quiz "}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
 
 export default App;
+
