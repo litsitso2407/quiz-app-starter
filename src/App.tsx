@@ -7,6 +7,8 @@ function App() {
   const [score, setScore] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showResults, setShowResults] = useState(false);
+  // Track which questions have been answered and what option was selected
+  const [answeredQuestions, setAnsweredQuestions] = useState<{[key: number]: number}>({});
 
   const currentQuestion = questions[currentIndex];
   const totalQuestions = questions.length;
@@ -16,6 +18,12 @@ function App() {
     if (selectedOption !== null) return; // Prevent changing the answer once selected
     setSelectedOption(index);
     
+    // Record this answer
+    setAnsweredQuestions(prev => ({
+      ...prev,
+      [currentIndex]: index
+    }));
+    
     if (index === currentQuestion.correctAnswer) {
       setScore((prevScore) => prevScore + 1);
     }
@@ -24,10 +32,22 @@ function App() {
   // Handle moving to the next question or finishing the quiz
   const handleNext = () => {
     if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex((prevIndex) => prevIndex + 1);
-      setSelectedOption(null); // Reset selection for the next question
+      const nextIndex = currentIndex + 1;
+      setCurrentIndex(nextIndex);
+      // Restore the selected option if this question was answered before
+      setSelectedOption(answeredQuestions[nextIndex] !== undefined ? answeredQuestions[nextIndex] : null);
     } else {
       setShowResults(true); // Quiz is done
+    }
+  };
+
+  // Handle going back to the previous question
+  const handlePrevious = () => {
+    if (currentIndex > 0) {
+      const prevIndex = currentIndex - 1;
+      setCurrentIndex(prevIndex);
+      // Restore the previously selected option
+      setSelectedOption(answeredQuestions[prevIndex] !== undefined ? answeredQuestions[prevIndex] : null);
     }
   };
 
@@ -37,6 +57,7 @@ function App() {
     setScore(0);
     setSelectedOption(null);
     setShowResults(false);
+    setAnsweredQuestions({});
   };
 
   // Results Screen
@@ -57,6 +78,9 @@ function App() {
     );
   }
 
+  // Check if current question was already answered
+  const isCurrentQuestionAnswered = answeredQuestions[currentIndex] !== undefined;
+
   // Main Quiz Screen
   return (
     <div className="app">
@@ -74,6 +98,7 @@ function App() {
       <div className="question-header">
         <p className="question-count">
           Question {currentIndex + 1} of {totalQuestions}
+          {isCurrentQuestionAnswered && <span className="answered-badge"> ✓ Answered</span>}
         </p>
         <span className="category-badge">{currentQuestion.category}</span>
       </div>
@@ -108,7 +133,25 @@ function App() {
         })}
       </div>
 
-      {/* Feedback & Next Button (Only shows after an option is selected) */}
+      {/* Navigation Buttons - Always visible */}
+      <div className="navigation-buttons">
+        <button 
+          className="prev-btn" 
+          onClick={handlePrevious}
+          disabled={currentIndex === 0}
+        >
+          ← Previous
+        </button>
+        <button 
+          className="next-btn" 
+          onClick={handleNext}
+          disabled={selectedOption === null && !isCurrentQuestionAnswered}
+        >
+          {currentIndex < totalQuestions - 1 ? "Next Question →" : "Finish Quiz 🏁"}
+        </button>
+      </div>
+
+      {/* Feedback - Only shows after an option is selected */}
       {selectedOption !== null && (
         <div className="feedback-container">
           <div className={`feedback-text ${selectedOption === currentQuestion.correctAnswer ? 'correct-text' : 'incorrect-text'}`}>
@@ -117,9 +160,6 @@ function App() {
           <p className="explanation">
             <strong>Explanation:</strong> {currentQuestion.explanation}
           </p>
-          <button className="next-btn" onClick={handleNext}>
-            {currentIndex < totalQuestions - 1 ? "Next Question ➔" : "Finish Quiz "}
-          </button>
         </div>
       )}
     </div>
@@ -127,4 +167,3 @@ function App() {
 }
 
 export default App;
-

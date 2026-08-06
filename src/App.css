@@ -1,6 +1,6 @@
-/* App.css - Enhanced Version with Better Readability */
+/* App.css - */
 
-/* ===== CSS Custom Properties ===== */
+/*CSS Custom Properties */
 :root {
   --primary-color: #6366f1;
   --primary-hover: #4f46e5;
@@ -138,12 +138,23 @@ h1::after {
   font-size: 0.95rem;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
 }
 
 .question-count::before {
   content: '📝';
   font-size: 1.1rem;
+}
+
+/* ===== Answered Badge ===== */
+.answered-badge {
+  color: #10b981;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 0.25rem;
+  animation: fadeIn 0.3s ease-in-out;
+  white-space: nowrap;
 }
 
 .category-badge {
@@ -157,6 +168,7 @@ h1::after {
   letter-spacing: 0.5px;
   border: 1px solid rgba(59, 130, 246, 0.2);
   transition: all var(--transition);
+  white-space: nowrap;
 }
 
 .category-badge:hover {
@@ -168,14 +180,14 @@ h1::after {
 .question-text {
   font-size: 1.3rem;
   font-weight: 600;
-  color: var(--text-primary); /* Changed from gradient to solid color */
+  color: var(--text-primary);
   line-height: 1.6;
   margin-bottom: 2rem;
   padding: 1.2rem 1.5rem;
-  background: #f8fafc; /* Lighter background for better contrast */
+  background: #f8fafc;
   border-radius: var(--radius-md);
   border-left: 4px solid var(--primary-color);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 /* ===== Options Container ===== */
@@ -188,15 +200,15 @@ h1::after {
   padding: 16px 20px;
   font-size: 1rem;
   text-align: left;
-  background-color: #f8fafc; /* Lighter background for better readability */
-  border: 2px solid #d1d5db; /* Darker border for better visibility */
+  background-color: #f8fafc;
+  border: 2px solid #d1d5db;
   border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition);
   position: relative;
   overflow: hidden;
   font-weight: 500;
-  color: var(--text-primary); /* Solid dark color for readability */
+  color: var(--text-primary);
 }
 
 .option-btn::before {
@@ -213,7 +225,7 @@ h1::after {
 }
 
 .option-btn:hover:not(:disabled) {
-  background-color: #eef2ff; /* Slightly colored hover state */
+  background-color: #eef2ff;
   border-color: var(--primary-color);
   transform: translateX(4px);
   box-shadow: var(--shadow-md);
@@ -234,14 +246,14 @@ h1::after {
 
 .option-btn:disabled {
   cursor: not-allowed;
-  opacity: 0.8; /* Increased from 0.7 for better visibility */
+  opacity: 0.8;
 }
 
 /* ===== Correct/Incorrect States ===== */
 .option-btn.correct {
   background-color: var(--success-light);
   border-color: var(--success-color);
-  color: #065f46; /* Dark green text for readability */
+  color: #065f46;
   font-weight: 600;
   animation: pulse 0.5s ease-out;
 }
@@ -254,7 +266,7 @@ h1::after {
 .option-btn.incorrect {
   background-color: var(--danger-light);
   border-color: var(--danger-color);
-  color: #991b1b; /* Dark red text for readability */
+  color: #991b1b;
   font-weight: 600;
   animation: shake 0.5s ease-out;
 }
@@ -268,7 +280,7 @@ h1::after {
 .feedback-container {
   margin-top: 2rem;
   padding: 1.5rem;
-  background: #f8fafc; /* Solid light background */
+  background: #f8fafc;
   border-radius: var(--radius-md);
   border: 1px solid var(--border-color);
   border-left: 5px solid var(--primary-color);
@@ -286,22 +298,22 @@ h1::after {
 }
 
 .correct-text { 
-  color: #059669; /* Darker green for better readability */
+  color: #059669;
 }
 
 .incorrect-text { 
-  color: #dc2626; /* Darker red for better readability */
+  color: #dc2626;
 }
 
 .explanation {
-  color: #374151; /* Darker text for better readability */
+  color: #374151;
   line-height: 1.7;
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
   padding: 1rem;
   background: #ffffff;
   border-radius: var(--radius-sm);
-  border: 1px solid #d1d5db; /* Darker border */
+  border: 1px solid #d1d5db;
 }
 
 .explanation strong {
@@ -311,8 +323,56 @@ h1::after {
   font-weight: 700;
 }
 
+/* ===== Navigation Buttons ===== */
+.navigation-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 0.5rem;
+}
+
+/* Previous Button */
+.prev-btn {
+  flex: 1;
+  padding: 14px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #374151;
+  background: #f3f4f6;
+  border: 2px solid #d1d5db;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.prev-btn:hover:not(:disabled) {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.prev-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.prev-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: #f9fafb;
+  border-color: #e5e7eb;
+  color: #9ca3af;
+}
+
+.prev-btn:focus-visible {
+  outline: 3px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Updated Next Button for side-by-side layout */
 .next-btn {
-  width: 100%;
+  flex: 2;
   padding: 14px;
   font-size: 1.1rem;
   font-weight: 600;
@@ -370,7 +430,7 @@ h1::after {
 }
 
 .score-card {
-  background: #f8fafc; /* Solid light background */
+  background: #f8fafc;
   padding: 2.5rem;
   border-radius: var(--radius-lg);
   margin-bottom: 2rem;
@@ -391,14 +451,14 @@ h1::after {
 .score-text {
   font-size: 3.5rem;
   font-weight: 800;
-  color: var(--text-primary); /* FIXED: Solid dark color instead of gradient clip */
+  color: var(--text-primary);
   margin: 1rem 0 0.5rem;
 }
 
 .score-percentage {
   font-size: 1.8rem;
   font-weight: 700;
-  color: #059669; /* Darker green for readability */
+  color: #059669;
   margin-top: 0.5rem;
   display: flex;
   align-items: center;
@@ -460,6 +520,17 @@ h1::after {
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -543,9 +614,28 @@ h1::after {
     flex-direction: column;
     align-items: flex-start;
   }
+  
+  .question-count {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .answered-badge {
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
 
   .option-btn:hover:not(:disabled) {
     transform: translateX(2px);
+  }
+  
+  .navigation-buttons {
+    flex-direction: column;
+  }
+  
+  .prev-btn,
+  .next-btn {
+    flex: 1;
   }
 }
 
@@ -573,6 +663,7 @@ h1::after {
   }
   
   .next-btn,
+  .prev-btn,
   .restart-btn {
     display: none;
   }
