@@ -7,3 +7,4 @@ export interface Question {
     "git" | "react" | "typescript" | "tooling" | "deployment" | "html-css";
   explanation: string;
 }
+export type AnsweredQuestions = Record<number, number>;
